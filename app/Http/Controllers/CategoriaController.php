@@ -14,8 +14,8 @@ class CategoriaController extends Controller
      */
     public function index()
     {
-        $categorias = Categoria::all();
-        return $categorias;
+        $categoria = Categoria::all();
+        return $categoria;
     }
 
 
@@ -29,9 +29,9 @@ class CategoriaController extends Controller
     public function store(Request $request)
     {
         $categoria = new Categoria();
-        $categoria->Cat_name=$request->name;
-        $categoria->Cat_description=$request->name;
-        $categoria->Cat_condition='1';
+        $categoria->cat_name=$request->name;
+        $categoria->cat_description=$request->description;
+        $categoria->cat_condition='1';
         $categoria->save();
 
     }
@@ -46,15 +46,15 @@ class CategoriaController extends Controller
     public function update(Request $request)
     {
         $categoria =  Categoria::findOrFail($request->id);
-        $categoria->Cat_name=$request->name;
-        $categoria->Cat_description=$request->name;
-        $categoria->Cat_condition='1';
+        $categoria->cat_name=$request->name;
+        $categoria->cat_description=$request->description;
+        $categoria->cat_condition='1';
         $categoria->save();
     }
     public function off(Request $request)
     {
         $categoria =  Categoria::findOrFail($request->id);
-        $categoria->Cat_condition='0';
+        $categoria->cat_condition='0';
         $categoria->save();
     }
     public function on(Request $request)
