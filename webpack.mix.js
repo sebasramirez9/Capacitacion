@@ -23,6 +23,7 @@ mix.styles([
         'resources/assets/templates/js/Chart.min.js',
         'resources/assets/templates/js/pace.min.js',
         'resources/assets/templates/js/template.js',
+        'resources/assets/templates/js/sweetalert2.all.js'
     ], 'public/js/template.js')
 
 .js(['resources/assets/js/app.js'],'public/js/app.js');

@@ -41,12 +41,19 @@
                         <tbody>
                         <tr v-for="categoria in arrayCategory":key="categoria.id">
                             <td>
-                                <button type="button" class="btn btn-warning btn-sm" >
+                                <button type="button" class="btn btn-warning btn-sm" @click="OpenModal('categoria','actualizar',categoria)">
                                     <i class="icon-pencil"></i>
                                 </button> &nbsp;
-                                <button type="button" class="btn btn-danger btn-sm" >
-                                    <i class="icon-trash"></i>
-                                </button>
+                                <template v-if="categoria.cat_condition">
+                                    <button type="button" class="btn btn-danger btn-sm" @click="Offcategory()">
+                                        <i class="icon-trash"></i>
+                                    </button>
+                                </template>
+                                <template v-else>
+                                    <button type="button" class="btn btn-danger btn-sm" @click="Oncategory(categoria.id)">
+                                        <i class="icon-plus"></i>
+                                    </button>
+                                </template>
                             </td>
 
                             <td v-text="categoria.cat_name"></td>
@@ -127,7 +134,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" @click="CloseModal()">Cerrar</button>
                         <button type="button" v-if="typeaction==1" class="btn btn-primary" @click="registerCategory()">Guardar</button>
-                        <button type="button" v-if="typeaction==2" class="btn btn-primary">Actualizar</button>
+                        <button type="button" v-if="typeaction==2" class="btn btn-primary" @click="UpdateCategory()">Actualizar</button>
                     </div>
                 </div>
                 <!-- /.modal-content -->
@@ -135,29 +142,7 @@
             <!-- /.modal-dialog -->
         </div>
         <!--Fin del modal-->
-        <!-- Inicio del modal Eliminar -->
-        <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
-            <div class="modal-dialog modal-danger" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Eliminar Categoría</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Estas seguro de eliminar la categoría?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-danger">Eliminar</button>
-                    </div>
-                </div>
-                <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
-        </div>
-        <!-- Fin del modal Eliminar -->
+
 
     </main>
 </template>
@@ -178,7 +163,8 @@
                 titulomodal:'',
                 typeaction:1,
                 errorCategory:0,
-                errorShowMsjCategory:[]
+                errorShowMsjCategory:[],
+                category_id:0
             }
         },
         methods:
@@ -213,6 +199,58 @@
                     });
 
                 },
+                UpdateCategory()
+                {
+                    if(this.ValideCategory())
+                    {
+                        return;
+                    }
+                    let me=this;
+
+                    axios.put('/categoria/actualizar',{'name':this.name,'description':this.description,'id':this.category_id}).then(function (response) {
+                        me.CloseModal();
+                        me.listCategory();
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                },
+                Offcategory()
+                {
+                    const swalWithBootstrapButtons = Swal.mixin({
+                        customClass: {
+                            confirmButton: 'btn btn-success',
+                            cancelButton: 'btn btn-danger'
+                        },
+                        buttonsStyling: false,
+                    })
+
+                    swalWithBootstrapButtons.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, delete it!',
+                        cancelButtonText: 'No, cancel!',
+                        reverseButtons: true
+                    }).then((result) => {
+                        if (result.value) {
+                            swalWithBootstrapButtons.fire(
+                                'Deleted!',
+                                'Your file has been deleted.',
+                                'success'
+                            )
+                        } else if (
+                            // Read more about handling dismissals
+                            result.dismiss === Swal.DismissReason.cancel
+                        ) {
+                            swalWithBootstrapButtons.fire(
+                                'Cancelled',
+                                'Your imaginary file is safe :)',
+                                'error'
+                            )
+                        }
+                    })
+                },
                 ValideCategory()
                     {
                         this.errorCategory=0;
@@ -240,10 +278,19 @@
                                     this.nombre='';
                                     this.titulomodal='Registrar categoria';
                                     this.description='';
+                                    this.typeaction=1;
                                     break;
                                 }
                                 case 'actualizar':
                                 {
+                                    //console.log(data);
+                                    this.modal=1;
+                                    this.titulomodal='Actualizar categoria';
+                                    this.typeaction=2;
+                                    this.category_id=data['id'];
+                                    this.name=data['cat_name'];
+                                    this.description=data['cat_description'];
+                                    break;
 
                                 }
                             }
