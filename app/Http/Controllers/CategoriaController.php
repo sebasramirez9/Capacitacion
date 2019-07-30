@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Categoria;
+
 //use Illuminate\Support\Facades\DB;
+
 
 class CategoriaController extends Controller
 {
@@ -13,6 +15,7 @@ class CategoriaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index(Request $request)
     {
        // if(!$request->ajax()) return redirect('/');
@@ -44,6 +47,7 @@ class CategoriaController extends Controller
 
 
 
+
     }
 
 
@@ -56,7 +60,10 @@ class CategoriaController extends Controller
      */
     public function store(Request $request)
     {
+
        // if(!$request->ajax()) return redirect('/');
+
+
         $categoria = new Categoria();
         $categoria->cat_name=$request->name;
         $categoria->cat_description=$request->description;
@@ -74,7 +81,9 @@ class CategoriaController extends Controller
      */
     public function update(Request $request)
     {
+
         //if(!$request->ajax()) return redirect('/');
+
         $categoria =  Categoria::findOrFail($request->id);
         $categoria->cat_name=$request->name;
         $categoria->cat_description=$request->description;
@@ -83,14 +92,18 @@ class CategoriaController extends Controller
     }
     public function off(Request $request)
     {
+
         //if(!$request->ajax()) return redirect('/');
+
         $categoria =  Categoria::findOrFail($request->id);
         $categoria->cat_condition='0';
         $categoria->save();
     }
     public function on(Request $request)
     {
+
         //if(!$request->ajax()) return redirect('/');
+
         $categoria =  Categoria::findOrFail($request->id);
         $categoria->Cat_condition='1';
         $categoria->save();
