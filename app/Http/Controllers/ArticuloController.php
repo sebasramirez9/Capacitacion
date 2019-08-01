@@ -76,7 +76,7 @@ class ArticuloController extends Controller
     public function on(Request $request)
     {
         //if(!$request->ajax()) return redirect('/');
-        $articulo =  Categoria::findOrFail($request->id);
+        $articulo =  Articulo::findOrFail($request->id);
         $articulo->art_condition='1';
         $articulo->save();
     }

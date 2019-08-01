@@ -50,7 +50,13 @@ class CategoriaController extends Controller
 
     }
 
+    public function selectCategory(Request $request)
+    {
 
+        $categorias= Categoria::where('cat_condition','=','1')
+            ->select('id','cat_name')->orderby('cat_name','asc')->get();
+        return['categorias' =>$categorias];
+    }
 
     /**
      * Store a newly created resource in storage.

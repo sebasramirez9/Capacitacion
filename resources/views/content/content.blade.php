@@ -7,7 +7,7 @@
     <categoria></categoria>
 </template>
 <template v-if="menu==2">
-    <h1>Contenido del menu 2</h1>
+    <articulos></articulos>
 </template>
 <template v-if="menu==3">
     <h1>Contenido del menu 3</h1>
@@ -19,7 +19,7 @@
     <h1>Contenido del menu 5</h1>
 </template>
 <template v-if="menu==6">
-    <h1>Contenido del menu 6</h1>
+   <client></client>
 </template>
 <template v-if="menu==7">
     <h1>Contenido del menu 7</h1>
