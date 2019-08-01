@@ -42,7 +42,7 @@ class ClienteController extends Controller
 
         $personas = new Persona();
         $personas->nombre=$request->name;
-        $personas->tipo_docuemento=$request->type_document;
+        $personas->tipo_documento=$request->type_document;
         $personas->num_documento=$request->num_document;
         $personas->direccion=$request->address;
         $personas->telefono=$request->tel;
@@ -57,9 +57,9 @@ class ClienteController extends Controller
 
         $personas =  Persona::findOrFail($request->id);
         $personas->nombre=$request->name;
-        $personas->tipo_docuemento=$request->type_document;
+        $personas->tipo_documento=$request->type_document;
         $personas->num_documento=$request->num_document;
-        $personas->direccion=$request->adress;
+        $personas->direccion=$request->address;
         $personas->telefono=$request->tel;
         $personas->email=$request->email;
         $personas->save();

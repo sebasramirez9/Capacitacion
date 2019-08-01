@@ -9,6 +9,7 @@ window.Vue = require('vue');
 
 Vue.component('categoria', require('./components/Categoria.vue').default);
 Vue.component('articulos', require('./components/Articulo.vue').default);
+Vue.component('client', require('./components/Client.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

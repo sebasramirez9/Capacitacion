@@ -203,7 +203,7 @@
                         'to':0,
                     },
                 offset : 3,
-                criterio:'cat_name',
+                criterio:'art_name',
                 buscar:'',
                 arrayCategory:[]
 

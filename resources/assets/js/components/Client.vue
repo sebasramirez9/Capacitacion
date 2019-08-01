@@ -93,19 +93,51 @@
                             <div class="form-group row">
                                 <label class="col-md-3 form-control-label" for="text-input">Nombre</label>
                                 <div class="col-md-9">
-                                    <input type="text" v-model="name" class="form-control" placeholder="Nombre de categoría">
+                                    <input type="text" v-model="name" class="form-control" placeholder="Nombre de la persona">
 
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="email-input">Descripción</label>
+                                <label class="col-md-3 form-control-label" for="text-input">Tipo de documento</label>
                                 <div class="col-md-9">
-                                    <input type="email" v-model="description" class="form-control" placeholder="Ingrese descripcion">
+                                    <select v-model="type_document" class="form-control">
+                                        <option value="DNI">DNI</option>
+                                        <option value="RUC">RUC</option>
+                                        <option value="PASS">PASS</option>
+                                    </select>
+
                                 </div>
                             </div>
-                            <div v-show="errorCategory" class="form-group row div-error">
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label" for="text-input">Numero </label>
+                                <div class="col-md-9">
+                                    <input type="text" v-model="num_document" class="form-control" placeholder="Numero">
+
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label" for="text-input">Direccion </label>
+                                <div class="col-md-9">
+                                    <input type="text" v-model="address" class="form-control" placeholder="Direccion">
+
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label" for="text-input">Telefono </label>
+                                <div class="col-md-9">
+                                    <input type="text" v-model="tel" class="form-control" placeholder="Nombre de categoría">
+
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label" for="email-input">Email</label>
+                                <div class="col-md-9">
+                                    <input type="email" v-model="email" class="form-control" placeholder="Email">
+                                </div>
+                            </div>
+                            <div v-show="errorPerson" class="form-group row div-error">
                                 <div class="text center text-error">
-                                    <div v-for="error in errorShowMsjCategory" key="error" v-text="error">
+                                    <div v-for="error in errorShowMsjPerson" key="error" v-text="error">
 
                                     </div>
                                 </div>
@@ -114,8 +146,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" @click="CloseModal()">Cerrar</button>
-                        <button type="button" v-if="typeaction==1" class="btn btn-primary" @click="registerCategory()">Guardar</button>
-                        <button type="button" v-if="typeaction==2" class="btn btn-primary" @click="UpdateCategory()">Actualizar</button>
+                        <button type="button" v-if="typeaction==1" class="btn btn-primary" @click="registerPerson()">Guardar</button>
+                        <button type="button" v-if="typeaction==2" class="btn btn-primary" @click="UpdatePerson()">Actualizar</button>
                     </div>
                 </div>
                 <!-- /.modal-content -->
@@ -151,8 +183,8 @@
                 modal:0,
                 titulomodal:'',
                 typeaction:1,
-                errorPersona:0,
-                errorShowMsjPersona:[],
+                errorPerson:0,
+                errorShowMsjPerson:[],
                 pagination:
                     {
                         'total' : 0,
@@ -163,7 +195,7 @@
                         'to':0,
                     },
                 offset : 3,
-                criterio:'cat_name',
+                criterio:'nombre',
                 buscar:''
 
             }
@@ -203,7 +235,7 @@
                 listPerson(page,buscar,criterio)
                 {
                     let me=this;
-                    var url='/cliente?page=' +page +'&buscar='+buscar +'&criterio='+criterio;
+                    var url='/client?page=' +page +'&buscar='+buscar +'&criterio='+criterio;
                     axios.get(url)
                         .then(function (response) {
                             var respuesta =response.data;
@@ -223,161 +255,87 @@
                     me.pagination.current_page=page;
                     me.listPerson(page,buscar,criterio);
                 },
-                registerCategory()
+                registerPerson()
                 {
-                    if(this.ValideCategory())
+                    if(this.ValidePerson())
                     {
                         return;
                     }
                     let me=this;
 
-                    axios.post('/categoria/registrar',{'name':this.name,'description':this.description}).then(function (response) {
+                    axios.post('/client/registrar',{
+                        'name':this.name,
+                        'type_document':this.type_document,
+                        'num_document':this.num_document,
+                        'address':this.address,
+                        'tel':this.tel,
+                        'email':this.email,
+                    }).then(function (response) {
                         me.CloseModal();
-                        me.listCategory(1,'','name');
+                        me.listPerson(1,'','name');
                     }).catch(function (error) {
                         console.log(error);
                     });
 
                 },
-                UpdateCategory()
+                UpdatePerson()
                 {
-                    if(this.ValideCategory())
+                    if(this.ValidePerson())
                     {
                         return;
                     }
                     let me=this;
 
-                    axios.put('/categoria/actualizar',{'name':this.name,'description':this.description,'id':this.category_id}).then(function (response) {
+                    axios.put('/client/actualizar',{
+                        'name':this.name,
+                        'type_document':this.type_document,
+                        'num_document':this.num_document,
+                        'address':this.address,
+                        'tel':this.tel,
+                        'email':this.email,
+                        'id':this.person_id
+                    }).then(function (response) {
                         me.CloseModal();
-                        me.listCategory(1,'','name');
+                        me.listPerson(1,'','name');
                     }).catch(function (error) {
                         console.log(error);
                     });
                 },
-                Offcategory(id)
+                ValidePerson()
                 {
-                    const swalWithBootstrapButtons = Swal.mixin({
-                        customClass: {
-                            confirmButton: 'btn btn-success',
-                            cancelButton: 'btn btn-danger'
-                        },
-                        buttonsStyling: false,
-                    })
-
-                    swalWithBootstrapButtons.fire({
-                        title: '¿Estas seguro?',
-                        text: "desactivaras la categoria.",
-                        type: 'warning',
-                        showCancelButton: true,
-                        confirmButtonText: 'Aceptar',
-                        cancelButtonText: 'No, cancelar!',
-                        reverseButtons: true
-                    }).then((result) => {
-                        if (result.value) {
-
-
-                            let me=this;
-
-                            axios.put('/categoria/desactivar',{'id':id}).then(function (response) {
-
-                                me.listCategory(1,'','name');
-                                swalWithBootstrapButtons.fire(
-                                    'Desactivada!',
-                                    'Tu categoria ha sido desactivada',
-                                    'success'
-                                )
-                            }).catch(function (error) {
-                                console.log(error);
-                            });
-
-                        } else if (
-                            // Read more about handling dismissals
-                            result.dismiss === Swal.DismissReason.cancel
-                        ) {
-                            swalWithBootstrapButtons.fire(
-                                'Cancelado',
-                                'Tu categoria sigue activada ',
-                                'error'
-                            )
-                        }
-                    })
-                },
-                Oncategory(id)
-                {
-                    const swalWithBootstrapButtons = Swal.mixin({
-                        customClass: {
-                            confirmButton: 'btn btn-success',
-                            cancelButton: 'btn btn-danger'
-                        },
-                        buttonsStyling: false,
-                    })
-
-                    swalWithBootstrapButtons.fire({
-                        title: '¿Estas seguro?',
-                        text: "activaras la categoria.",
-                        type: 'warning',
-                        showCancelButton: true,
-                        confirmButtonText: 'Aceptar',
-                        cancelButtonText: 'No, cancelar!',
-                        reverseButtons: true
-                    }).then((result) => {
-                        if (result.value) {
-
-
-                            let me=this;
-
-                            axios.put('/categoria/activar',{'id':id}).then(function (response) {
-
-
-                                swalWithBootstrapButtons.fire(
-                                    'activada!',
-                                    'Tu categoria ha sido activada',
-                                    'success'
-                                )
-                                me.listCategory(1,'','name');
-                            }).catch(function (error) {
-                                console.log(error);
-                            });
-
-                        } else if (
-                            // Read more about handling dismissals
-                            result.dismiss === Swal.DismissReason.cancel
-                        ) {
-                            swalWithBootstrapButtons.fire(
-                                'Cancelado',
-                                'Tu categoria sigue desactivada ',
-                                'error'
-                            )
-                        }
-                    })
-                },
-                ValideCategory()
-                {
-                    this.errorCategory=0;
-                    this.errorShowMsjCategory=[];
-                    if(!this.name) this.errorShowMsjCategory.push("El nombre de la categoria no puede estar vacio");
-                    if(this.errorShowMsjCategory.length) this.errorCategory=1;
-                    return this.errorCategory;
+                    this.errorPerson=0;
+                    this.errorShowMsjPerson=[];
+                    if(!this.name) this.errorShowMsjPerson.push("El nombre de la persona no puede estar vacio");
+                    if(this.errorShowMsjPerson.length) this.errorPerson=1;
+                    return this.errorPerson;
                 },
                 CloseModal()
                 {
                     this.modal=0;
                     this.titulomodal='';
                     this.name='';
-                    this.description='';
+                    this.type_document='DNI';
+                    this.num_document='';
+                    this.address='';
+                    this.tel='';
+                    this.email='';
+                    this.errorPerson=0
                 },
                 OpenModal(model,action,data=[])
                 {
                     switch (model) {
-                        case "categoria":
+                        case "persona":
                         {
                             switch (action) {
                                 case 'registrar':
                                 {
                                     this.modal=1;
                                     this.name='';
-                                    this.titulomodal='Registrar categoria';
-                                    this.description='';
+                                    this.type_document='DNI';
+                                    this.num_document='';
+                                    this.address='';
+                                    this.tel='';
+                                    this.email='';
                                     this.typeaction=1;
                                     break;
                                 }
@@ -387,9 +345,13 @@
                                     this.modal=1;
                                     this.titulomodal='Actualizar categoria';
                                     this.typeaction=2;
-                                    this.category_id=data['id'];
-                                    this.name=data['cat_name'];
-                                    this.description=data['cat_description'];
+                                    this.person_id=data['id'];
+                                    this.name=data['nombre'];
+                                    this.address=data['direccion'];
+                                    this.type_document=data['tipo_documento'];
+                                    this.num_document=data['num_documento'];
+                                    this.tel=data['telefono'];
+                                    this.email=data['email'];
                                     break;
 
                                 }
